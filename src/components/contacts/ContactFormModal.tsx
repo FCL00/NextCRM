@@ -97,8 +97,8 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-stone-200 relative animate-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between pb-4 border-b border-stone-100 mb-5">
+      <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-stone-200 relative animate-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-4 border-b border-stone-100 mb-5">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center">
               <User className="w-4 h-4" />
@@ -125,7 +125,7 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 px-4">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">First Name *</label>
               <input
@@ -150,7 +150,7 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-4">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">Email Address *</label>
               <div className="relative">
@@ -181,7 +181,7 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-4">
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">Job Title</label>
               <div className="relative">
@@ -216,7 +216,7 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({
             </div>
           </div>
 
-          <div>
+          <div className='px-4'>
             <label className="block text-xs font-semibold text-stone-700 mb-1">Contact Status</label>
             <div className="flex gap-2">
               {(['Lead', 'Active', 'Inactive'] as ContactStatus[]).map(st => (
@@ -236,7 +236,7 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({
             </div>
           </div>
 
-          <div>
+          <div className='px-4'>
             <label className="block text-xs font-semibold text-stone-700 mb-1">Notes & Context</label>
             <textarea
               rows={3}
@@ -247,7 +247,7 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({
             />
           </div>
 
-          <div className="pt-3 border-t border-stone-100 flex items-center justify-end gap-2.5">
+          <div className="p-3 border-t border-stone-100 flex items-center justify-end gap-2.5">
             <button
               type="button"
               onClick={onClose}
