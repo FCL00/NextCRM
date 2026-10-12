@@ -1,3 +1,7 @@
+# NextCRM
+
+> A modern, responsive CRM web application designed for small businesses, freelancers, and sales teams who want a simple, powerful way to manage customer relationships and drive their sales pipeline.
+
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
@@ -9,10 +13,6 @@
 <p align="center">
   <img src="./public/next-crm.png" alt="Next CRM app preview" width="100%" />
 </p>
-
-# Next CRM
-
-> A modern, responsive CRM web application designed for small businesses, freelancers, and sales teams who want a simple, powerful way to manage customer relationships and drive their sales pipeline.
 
 ---
 ## 🌟 Overview
