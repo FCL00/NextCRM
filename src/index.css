@@ -12,6 +12,10 @@
     color: #242424;
     -webkit-font-smoothing: antialiased;
   }
+
+  button, a {
+    cursor: pointer;
+  }
 }
 
 /* Custom subtle scrollbar */

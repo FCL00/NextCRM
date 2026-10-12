@@ -161,7 +161,7 @@ CREATE POLICY "Users can manage own activities" ON public.activities FOR ALL USI
           <div>
             <h3 className="text-xl font-bold text-stone-900">Supabase Database Connection</h3>
             <p className="text-xs text-stone-500">
-              Connect Next CRM to your actual Supabase PostgreSQL database and Auth
+              Connect NextCRM to your actual Supabase PostgreSQL database and Auth
             </p>
           </div>
         </div>
@@ -184,7 +184,7 @@ CREATE POLICY "Users can manage own activities" ON public.activities FOR ALL USI
             <p className="mt-1 leading-relaxed">
               {isSupabaseConfigured
                 ? `Connected to: ${supabaseUrl}. All contacts, companies, deals, and activities persist to your Supabase PostgreSQL instance.`
-                : 'Next CRM is configured to use Supabase PostgreSQL and Supabase Auth. To connect your actual project, configure your environment variables or paste your project credentials below.'}
+                : 'NextCRM is configured to use Supabase PostgreSQL and Supabase Auth. To connect your actual project, configure your environment variables or paste your project credentials below.'}
             </p>
           </div>
         </div>
