@@ -1,11 +1,20 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
+</p>
+
+<p align="center">
+  <img src="./public/next-crm.png" alt="Next CRM app preview" width="100%" />
+</p>
+
 # Next CRM
 
 > A modern, responsive CRM web application designed for small businesses, freelancers, and sales teams who want a simple, powerful way to manage customer relationships and drive their sales pipeline.
 
-![Next CRM Preview](https://placehold.co/1200x630/FAF9F6/242424?text=Next+CRM+%E2%80%94+Simple%2C+Powerful+Sales+Pipeline)
-
 ---
-
 ## 🌟 Overview
 
 **Next CRM** delivers a polished, intuitive SaaS experience built around speed, clarity, and visual elegance. Designed with a warm orange palette, strict visual hierarchy, and real-time data calculations, Next CRM eliminates enterprise bloat while giving sales teams everything needed to close deals faster.
