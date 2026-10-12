@@ -21,7 +21,7 @@ import { ContactFormModal } from './components/contacts/ContactFormModal';
 import { CompanyFormModal } from './components/companies/CompanyFormModal';
 import { DealFormModal } from './components/deals/DealFormModal';
 import { ActivityFormModal } from './components/activities/ActivityFormModal';
-import { SupabaseConnectModal } from './components/common/SupabaseConnectModal';
+// import { SupabaseConnectModal } from './components/common/SupabaseConnectModal';
 
 const AppContent: React.FC = () => {
   const { user, activeView, quickAddType, closeQuickAdd, isConnectModalOpen, closeConnectModal } = useCrm();
@@ -34,7 +34,7 @@ const AppContent: React.FC = () => {
       <>
         <LandingPage />
         <AuthModal />
-        <SupabaseConnectModal isOpen={isConnectModalOpen} onClose={closeConnectModal} />
+        {/* <SupabaseConnectModal isOpen={isConnectModalOpen} onClose={closeConnectModal} /> */}
         <ToastContainer />
       </>
     );
@@ -89,10 +89,10 @@ const AppContent: React.FC = () => {
       />
 
       {/* Supabase, Auth Modal & Toast Container */}
-      <SupabaseConnectModal
+      {/* <SupabaseConnectModal
         isOpen={isConnectModalOpen}
         onClose={closeConnectModal}
-      />
+      /> */}
       <AuthModal />
       <ToastContainer />
     </div>
