@@ -1,0 +1,6 @@
+{
+  "name": "Next CRM",
+  "description": "Modern, responsive CRM web application for small businesses and sales teams to manage customer relationships, deals, and sales pipelines.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
