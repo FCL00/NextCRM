@@ -44,11 +44,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
   return (
     <aside
       className={`hidden md:flex flex-col bg-white border-r border-stone-200 transition-all duration-300 relative select-none ${
-        collapsed ? 'w-[72px]' : 'w-[250px]'
+        collapsed ? 'w-18' : 'w-62.5'
       }`}
     >
       {/* Brand Header */}
-      <div className="h-16 px-4 flex items-center justify-between border-b border-stone-100">
+      <div className="h-16 px-4 flex items-center justify-between border-b border-stone-100 relative">
         <div className="flex items-center gap-2.5 overflow-hidden">
           <div className="w-8 h-8 rounded-lg bg-orange-600 text-white flex items-center justify-center font-extrabold text-base shadow-xs shrink-0">
             N
@@ -56,13 +56,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
           {!collapsed && (
             <div className="truncate">
               <span className="font-bold tracking-tight text-stone-900 text-base">Next CRM</span>
-            </div>
+            </div> 
           )}
         </div>
 
         <button
           onClick={onToggleCollapse}
-          className="p-1.5 text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-md transition-colors"
+          className="p-px text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-md transition-colors absolute right-1 cursor-pointer"
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
@@ -80,7 +80,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
             <button
               key={item.id}
               onClick={() => setActiveView(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group relative ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group relative cursor-pointer ${
                 isActive
                   ? 'bg-orange-50 text-orange-700 font-semibold'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
@@ -127,7 +127,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
             onClick={signOut}
             title="Sign out"
             aria-label="Sign out"
-            className="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-stone-100 rounded-md transition-colors"
+            className="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-stone-100 rounded-md transition-colors cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>
