@@ -39,7 +39,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose }) => {
           {isPrivacy ? (
             <>
               <p>
-                At <strong>Next CRM</strong>, we respect your privacy and are committed to protecting the confidential customer relationships, deals, and notes you manage inside your workspace.
+                At <strong>NextCRM</strong>, we respect your privacy and are committed to protecting the confidential customer relationships, deals, and notes you manage inside your workspace.
               </p>
               <h4 className="font-semibold text-stone-800 text-sm">1. Data Ownership & Privacy</h4>
               <p>
@@ -57,11 +57,11 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose }) => {
           ) : (
             <>
               <p>
-                Welcome to <strong>Next CRM</strong>. By creating an account or accessing our workspace tools, you agree to these Terms of Service.
+                Welcome to <strong>NextCRM</strong>. By creating an account or accessing our workspace tools, you agree to these Terms of Service.
               </p>
               <h4 className="font-semibold text-stone-800 text-sm">1. Acceptable Business Use</h4>
               <p>
-                Next CRM is designed for business-to-business deal pipeline management, contact tracking, and customer communications. You agree not to use the platform for unlawful spam, harassment, or malicious activity.
+                NextCRM is designed for business-to-business deal pipeline management, contact tracking, and customer communications. You agree not to use the platform for unlawful spam, harassment, or malicious activity.
               </p>
               <h4 className="font-semibold text-stone-800 text-sm">2. Workspace Integrity</h4>
               <p>
@@ -69,7 +69,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose }) => {
               </p>
               <h4 className="font-semibold text-stone-800 text-sm">3. Limitation of Liability</h4>
               <p>
-                Next CRM provides pipeline calculation and forecasting tools to assist sales processes. We strive for high reliability and data consistency.
+                NextCRM provides pipeline calculation and forecasting tools to assist sales processes. We strive for high reliability and data consistency.
               </p>
             </>
           )}

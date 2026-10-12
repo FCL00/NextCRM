@@ -37,7 +37,7 @@ export const LandingPage: React.FC = () => {
               N
             </div>
             <span className="text-xl font-bold tracking-tight text-stone-900 whitespace-nowrap">
-              Next CRM
+              NextCRM
             </span>
           </div>
 
@@ -501,7 +501,7 @@ export const LandingPage: React.FC = () => {
               <div className="w-6 h-6 rounded-md bg-orange-600 text-white flex items-center justify-center font-bold text-xs">
                 N
               </div>
-              <span className="font-bold text-stone-900 text-sm">Next CRM</span>
+              <span className="font-bold text-stone-900 text-sm">NextCRM</span>
             </div>
             <span className="hidden sm:inline text-stone-300">|</span>
             <p className="text-xs text-stone-500 text-center sm:text-left">

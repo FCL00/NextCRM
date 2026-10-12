@@ -11,13 +11,13 @@
 </p>
 
 <p align="center">
-  <img src="./public/next-crm.png" alt="Next CRM app preview" width="100%" />
+  <img src="./public/next-crm.png" alt="NextCRM app preview" width="100%" />
 </p>
 
 ---
 ## 🌟 Overview
 
-**Next CRM** delivers a polished, intuitive SaaS experience built around speed, clarity, and visual elegance. Designed with a warm orange palette, strict visual hierarchy, and real-time data calculations, Next CRM eliminates enterprise bloat while giving sales teams everything needed to close deals faster.
+**NextCRM** delivers a polished, intuitive SaaS experience built around speed, clarity, and visual elegance. Designed with a warm orange palette, strict visual hierarchy, and real-time data calculations, NextCRM eliminates enterprise bloat while giving sales teams everything needed to close deals faster.
 
 ### Key Highlights
 - **Real-Time Data Consistency**: Every dashboard metric, stage total, company summary, and chart updates dynamically whenever records are created, edited, dragged, or deleted.
@@ -90,7 +90,7 @@
 
 ## 🎨 Design System
 
-Next CRM adheres to a bespoke SaaS visual language:
+NextCRM adheres to a bespoke SaaS visual language:
 
 | Token | Value / Tailwind | Purpose |
 | :--- | :--- | :--- |
@@ -126,7 +126,7 @@ Next CRM adheres to a bespoke SaaS visual language:
 
 ## 💾 Database Schema & Supabase Setup
 
-Next CRM includes a production-ready PostgreSQL migration script located at **`supabase/schema.sql`**.
+NextCRM includes a production-ready PostgreSQL migration script located at **`supabase/schema.sql`**.
 
 ### Schema Overview
 

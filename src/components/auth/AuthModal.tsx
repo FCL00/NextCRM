@@ -67,7 +67,7 @@ export const AuthModal: React.FC = () => {
             <div className="w-8 h-8 rounded-lg bg-orange-500 text-white flex items-center justify-center font-bold text-base shadow-xs">
               N
             </div>
-            <span className="text-xl font-bold tracking-tight text-stone-900">Next CRM</span>
+            <span className="text-xl font-bold tracking-tight text-stone-900">NextCRM</span>
           </div>
           <h2 className="text-2xl font-bold text-stone-900">
             {authMode === 'signin' ? 'Welcome back' : 'Create your workspace'}

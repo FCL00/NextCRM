@@ -1,4 +1,4 @@
--- Next CRM Complete Supabase PostgreSQL Schema
+-- NextCRM Complete Supabase PostgreSQL Schema
 -- Run this in the Supabase SQL Editor (Dashboard -> SQL Editor -> New Query)
 
 -- 1. Profiles Table (extends Supabase auth.users)

@@ -55,7 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
           </div>
           {!collapsed && (
             <div className="truncate">
-              <span className="font-bold tracking-tight text-stone-900 text-base">Next CRM</span>
+              <span className="font-bold tracking-tight text-stone-900 text-base">NextCRM</span>
             </div> 
           )}
         </div>

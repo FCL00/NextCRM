@@ -52,7 +52,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) =
             <div className="w-8 h-8 rounded-lg bg-orange-600 text-white flex items-center justify-center font-extrabold text-base">
               N
             </div>
-            <span className="font-bold text-stone-900 text-base">Next CRM</span>
+            <span className="font-bold text-stone-900 text-base">NextCRM</span>
           </div>
           <button
             onClick={onClose}
