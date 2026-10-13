@@ -200,7 +200,7 @@ VITE_SUPABASE_ANON_KEY="your-anon-public-key"
 
 2. **Install dependencies**:
    ```bash
-   npm install
+   bun install
    ```
 
 3. **Configure environment variables**:
@@ -211,7 +211,7 @@ VITE_SUPABASE_ANON_KEY="your-anon-public-key"
 
 4. **Start the development server**:
    ```bash
-   npm run dev
+   bun run dev
    ```
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
@@ -221,11 +221,11 @@ VITE_SUPABASE_ANON_KEY="your-anon-public-key"
 
 | Command | Description |
 | :--- | :--- |
-| `npm run dev` | Starts the Vite development server on port 3000 |
-| `npm run build` | Compiles TypeScript and builds production assets in `dist/` |
-| `npm run preview` | Previews the built application locally |
-| `npm run lint` | Runs TypeScript type checking (`tsc --noEmit`) |
-| `npm run clean` | Removes build artifacts (`dist`) |
+| `bun run dev` | Starts the Vite development server on port 3000 |
+| `bun run build` | Compiles TypeScript and builds production assets in `dist/` |
+| `bun run preview` | Previews the built application locally |
+| `bun run lint` | Runs TypeScript type checking (`tsc --noEmit`) |
+| `bun run clean` | Removes build artifacts (`dist`) |
 
 ---
 
