@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCrm } from '../../context/CrmContext';
 import {
   Menu,
@@ -8,7 +9,6 @@ import {
   Building,
   Kanban,
   CalendarCheck,
-  Sparkles,
   X,
   ChevronDown,
 } from 'lucide-react';
@@ -20,10 +20,7 @@ interface TopNavProps {
 
 export const TopNav: React.FC<TopNavProps> = ({ onOpenMobileDrawer }) => {
   const {
-    activeView,
-    setActiveView,
     openQuickAdd,
-    loadDemoData,
     contacts,
     companies,
     deals,
@@ -31,6 +28,9 @@ export const TopNav: React.FC<TopNavProps> = ({ onOpenMobileDrawer }) => {
     setSelectedCompanyId,
     setSelectedDealId,
   } = useCrm();
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -74,13 +74,14 @@ export const TopNav: React.FC<TopNavProps> = ({ onOpenMobileDrawer }) => {
     };
   }, [searchQuery, contacts, companies, deals]);
 
-  const viewTitles: Record<string, string> = {
-    overview: 'Overview Dashboard',
-    contacts: 'Contacts',
-    companies: 'Companies',
-    deals: 'Deals & Pipeline',
-    activities: 'Activities & Tasks',
-    analytics: 'Sales Analytics',
+  const getPageTitle = (pathname: string) => {
+    if (pathname.startsWith('/contacts')) return 'Contacts';
+    if (pathname.startsWith('/companies')) return 'Companies';
+    if (pathname.startsWith('/deals')) return 'Deals & Pipeline';
+    if (pathname.startsWith('/activities')) return 'Activities & Tasks';
+    if (pathname.startsWith('/analytics')) return 'Sales Analytics';
+    if (pathname.startsWith('/dashboard') || pathname.startsWith('/overview')) return 'Overview Dashboard';
+    return 'CRM Workspace';
   };
 
   return (
@@ -89,7 +90,7 @@ export const TopNav: React.FC<TopNavProps> = ({ onOpenMobileDrawer }) => {
       <div className="flex items-center gap-3">
         <button
           onClick={onOpenMobileDrawer}
-          className="md:hidden p-2 text-stone-600 hover:text-stone-900 rounded-lg hover:bg-stone-100 transition-colors"
+          className="md:hidden p-2 text-stone-600 hover:text-stone-900 rounded-lg hover:bg-stone-100 transition-colors cursor-pointer"
           aria-label="Open navigation menu"
         >
           <Menu className="w-5 h-5" />
@@ -97,7 +98,7 @@ export const TopNav: React.FC<TopNavProps> = ({ onOpenMobileDrawer }) => {
 
         <div>
           <h1 className="text-lg font-bold text-stone-900 tracking-tight">
-            {viewTitles[activeView] || 'CRM Workspace'}
+            {getPageTitle(location.pathname)}
           </h1>
         </div>
       </div>
@@ -213,11 +214,11 @@ export const TopNav: React.FC<TopNavProps> = ({ onOpenMobileDrawer }) => {
                         <button
                           key={deal.id}
                           onClick={() => {
-                            setActiveView('deals');
+                            navigate('/deals');
                             setSelectedDealId(deal.id);
                             setIsSearchOpen(false);
                           }}
-                          className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-stone-50 text-left text-xs transition-colors"
+                          className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-stone-50 text-left text-xs transition-colors cursor-pointer"
                         >
                           <div>
                             <div className="font-semibold text-stone-900">{deal.title}</div>
@@ -240,11 +241,11 @@ export const TopNav: React.FC<TopNavProps> = ({ onOpenMobileDrawer }) => {
                         <button
                           key={contact.id}
                           onClick={() => {
-                            setActiveView('contacts');
+                            navigate('/contacts');
                             setSelectedContactId(contact.id);
                             setIsSearchOpen(false);
                           }}
-                          className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-stone-50 text-left text-xs transition-colors"
+                          className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-stone-50 text-left text-xs transition-colors cursor-pointer"
                         >
                           <div>
                             <div className="font-semibold text-stone-900">
@@ -267,11 +268,11 @@ export const TopNav: React.FC<TopNavProps> = ({ onOpenMobileDrawer }) => {
                         <button
                           key={company.id}
                           onClick={() => {
-                            setActiveView('companies');
+                            navigate('/companies');
                             setSelectedCompanyId(company.id);
                             setIsSearchOpen(false);
                           }}
-                          className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-stone-50 text-left text-xs transition-colors"
+                          className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-stone-50 text-left text-xs transition-colors cursor-pointer"
                         >
                           <div>
                             <div className="font-semibold text-stone-900">{company.name}</div>

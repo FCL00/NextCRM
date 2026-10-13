@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useCrm } from '../../context/CrmContext';
-import { AppView } from '../../types/crm';
 import {
   LayoutDashboard,
   Users,
@@ -19,17 +19,22 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse }) => {
-  const { activeView, setActiveView, user, signOut } = useCrm();
-  const [showDemoConfirm, setShowDemoConfirm] = useState(false);
+  const { user, signOut } = useCrm();
+  const navigate = useNavigate();
 
-  const navItems: { id: AppView; label: string; icon: React.ElementType }[] = [
-    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'contacts', label: 'Contacts', icon: Users },
-    { id: 'companies', label: 'Companies', icon: Building2 },
-    { id: 'deals', label: 'Deals', icon: Kanban },
-    { id: 'activities', label: 'Activities', icon: CheckSquare },
-    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+  const navItems = [
+    { path: '/dashboard', label: 'Overview', icon: LayoutDashboard },
+    { path: '/contacts', label: 'Contacts', icon: Users },
+    { path: '/companies', label: 'Companies', icon: Building2 },
+    { path: '/deals', label: 'Deals', icon: Kanban },
+    { path: '/activities', label: 'Activities', icon: CheckSquare },
+    { path: '/analytics', label: 'Analytics', icon: BarChart3 },
   ];
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   const getInitials = (name?: string) => {
     if (!name) return 'U';
@@ -49,8 +54,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
     >
       {/* Brand Header */}
       <div className="h-16 px-4 flex items-center justify-between border-b border-stone-100 relative">
-        <div className="flex items-center gap-2.5 overflow-hidden">
-          <div className="w-8 h-8 rounded-lg bg-orange-600 text-white flex items-center justify-center font-extrabold text-base shadow-xs shrink-0">
+        <Link to="/dashboard" className="flex items-center gap-2.5 overflow-hidden group">
+          <div className="w-8 h-8 rounded-lg bg-orange-600 group-hover:bg-orange-700 text-white flex items-center justify-center font-extrabold text-base shadow-xs shrink-0 transition-colors">
             N
           </div>
           {!collapsed && (
@@ -58,7 +63,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
               <span className="font-bold tracking-tight text-stone-900 text-base">NextCRM</span>
             </div> 
           )}
-        </div>
+        </Link>
 
         <button
           onClick={onToggleCollapse}
@@ -74,31 +79,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
       <nav className="p-3 space-y-1 flex-1 overflow-y-auto">
         {navItems.map(item => {
           const Icon = item.icon;
-          const isActive = activeView === item.id;
 
           return (
-            <button
-              key={item.id}
-              onClick={() => setActiveView(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group relative cursor-pointer ${
-                isActive
-                  ? 'bg-orange-50 text-orange-700 font-semibold'
-                  : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
-              }`}
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group relative cursor-pointer ${
+                  isActive
+                    ? 'bg-orange-50 text-orange-700 font-semibold'
+                    : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
+                }`
+              }
               title={collapsed ? item.label : undefined}
             >
-              <Icon
-                className={`w-4 h-4 shrink-0 transition-colors ${
-                  isActive ? 'text-orange-600' : 'text-stone-400 group-hover:text-stone-600'
-                }`}
-              />
-              {!collapsed && <span className="truncate">{item.label}</span>}
+              {({ isActive }) => (
+                <>
+                  <Icon
+                    className={`w-4 h-4 shrink-0 transition-colors ${
+                      isActive ? 'text-orange-600' : 'text-stone-400 group-hover:text-stone-600'
+                    }`}
+                  />
+                  {!collapsed && <span className="truncate">{item.label}</span>}
 
-              {/* Active pill indicator */}
-              {isActive && (
-                <span className="absolute left-0 top-2 bottom-2 w-1 bg-orange-600 rounded-r-full" />
+                  {/* Active pill indicator */}
+                  {isActive && (
+                    <span className="absolute left-0 top-2 bottom-2 w-1 bg-orange-600 rounded-r-full" />
+                  )}
+                </>
               )}
-            </button>
+            </NavLink>
           );
         })}
       </nav>
@@ -124,7 +134,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapse })
           </div>
 
           <button
-            onClick={signOut}
+            onClick={handleSignOut}
             title="Sign out"
             aria-label="Sign out"
             className="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-stone-100 rounded-md transition-colors cursor-pointer"

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCrm } from '../../context/CrmContext';
 import { LegalModal } from './LegalModal';
 import {
@@ -16,7 +17,7 @@ import {
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
-  const { openAuthModal, loginAsDemoUser } = useCrm();
+  const { user, openAuthModal, loginAsDemoUser } = useCrm();
   const [legalModalType, setLegalModalType] = useState<'privacy' | 'terms' | null>(null);
 
   const scrollToSection = (id: string) => {
@@ -65,21 +66,31 @@ export const LandingPage: React.FC = () => {
           </nav>
 
           {/* Zone 3: Primary Action & Sign In */}
-          <div className="flex items-center gap-3 shrink-0">
-            <button
-              onClick={() => openAuthModal('signin')}
-              className="px-3.5 py-1.5 text-xs font-semibold text-stone-700 hover:text-stone-900 transition-colors whitespace-nowrap"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => openAuthModal('signup')}
+          {user ? (
+            <Link
+              to="/dashboard"
               className="px-4 py-2 text-xs font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs whitespace-nowrap flex items-center gap-1.5"
             >
-              <span>Get Started Free</span>
+              <span>Go to Dashboard</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-3 shrink-0">
+              <button
+                onClick={() => openAuthModal('signin')}
+                className="px-3.5 py-1.5 text-xs font-semibold text-stone-700 hover:text-stone-900 transition-colors whitespace-nowrap cursor-pointer"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => openAuthModal('signup')}
+                className="px-4 py-2 text-xs font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs whitespace-nowrap flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>Get Started Free</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
@@ -98,13 +109,23 @@ export const LandingPage: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={() => openAuthModal('signup')}
-              className="w-full sm:w-auto px-7 py-3 text-base font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
-            >
-              <span>Start Selling Free</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            {user ? (
+              <Link
+                to="/dashboard"
+                className="w-full sm:w-auto px-7 py-3 text-base font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+              >
+                <span>Go to Dashboard</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            ) : (
+              <button
+                onClick={() => openAuthModal('signup')}
+                className="w-full sm:w-auto px-7 py-3 text-base font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>Start Selling Free</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            )}
             <button
               onClick={() => scrollToSection('features')}
               className="w-full sm:w-auto px-6 py-3 text-base font-semibold text-stone-700 hover:text-stone-900 bg-white hover:bg-stone-50 border border-stone-200 rounded-xl transition-colors shadow-xs"

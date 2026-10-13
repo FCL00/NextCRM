@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   User,
   Company,
@@ -109,7 +110,29 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [user, setUser] = useState<User | null>(() => {
     return storage.getCurrentUser();
   });
-  const [activeView, setActiveView] = useState<AppView>(() => (storage.getCurrentUser() ? 'overview' : 'landing'));
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const activeView: AppView = useMemo(() => {
+    const path = location.pathname;
+    if (path.startsWith('/contacts')) return 'contacts';
+    if (path.startsWith('/companies')) return 'companies';
+    if (path.startsWith('/deals')) return 'deals';
+    if (path.startsWith('/activities')) return 'activities';
+    if (path.startsWith('/analytics')) return 'analytics';
+    if (path.startsWith('/dashboard') || path.startsWith('/overview')) return 'overview';
+    return 'landing';
+  }, [location.pathname]);
+
+  const setActiveView = useCallback((view: AppView) => {
+    if (view === 'overview') {
+      navigate('/dashboard');
+    } else if (view === 'landing') {
+      navigate('/');
+    } else {
+      navigate(`/${view}`);
+    }
+  }, [navigate]);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
@@ -150,7 +173,6 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     supabaseService.getSupabaseCurrentUser().then(currentUser => {
       if (currentUser) {
         setUser(currentUser);
-        setActiveView('overview');
       }
     });
 
@@ -160,14 +182,14 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setUser(u);
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
-        setActiveView('landing');
+        navigate('/');
       }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [navigate]);
 
   // Reload data for the active user (either from Supabase PostgreSQL or isolated storage)
   const reloadUserData = useCallback(async (userId: string) => {
@@ -215,13 +237,13 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const loggedIn = await supabaseService.supabaseSignIn(email, pass);
       setUser(loggedIn);
       setIsAuthModalOpen(false);
-      setActiveView('overview');
+      navigate('/dashboard');
       showToast(`Welcome back, ${loggedIn.name}! Connected to Supabase.`);
     } else {
       const loggedIn = await storage.signInUser(email, pass);
       setUser(loggedIn);
       setIsAuthModalOpen(false);
-      setActiveView('overview');
+      navigate('/dashboard');
       showToast(`Welcome back, ${loggedIn.name}!`);
     }
   };
@@ -231,7 +253,7 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const created = await supabaseService.supabaseSignUp(name, email, pass);
       setUser(created);
       setIsAuthModalOpen(false);
-      setActiveView('overview');
+      navigate('/dashboard');
       showToast(`Account created in Supabase Auth!`, 'success');
       // Populate initial demo records to Supabase for the user
       await loadDemoData(true);
@@ -240,7 +262,7 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       storage.loadDemoData(created.id, true);
       setUser(created);
       setIsAuthModalOpen(false);
-      setActiveView('overview');
+      navigate('/dashboard');
       showToast(`Account created! Sample CRM workspace loaded.`, 'success');
     }
   };
@@ -252,7 +274,7 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       storage.signOutUser();
     }
     setUser(null);
-    setActiveView('landing');
+    navigate('/');
     showToast('You have been signed out.');
   };
 
@@ -280,7 +302,7 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       setUser(existingDemo);
       setIsAuthModalOpen(false);
-      setActiveView('overview');
+      navigate('/dashboard');
       showToast('Signed in to demo workspace as Alex Morgan');
     }
   };
