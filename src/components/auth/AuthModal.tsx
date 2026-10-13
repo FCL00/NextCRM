@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
 import { useCrm } from '../../context/CrmContext';
-import { X, Eye, EyeOff, Lock, Mail, User as UserIcon, ArrowRight, Sparkles } from 'lucide-react';
+import { AuthMode } from '../../types/crm';
+import { X, Eye, EyeOff, Lock, Mail, User as UserIcon, ArrowRight, ArrowLeft, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const AuthModal: React.FC = () => {
-  const { isAuthModalOpen, closeAuthModal, authMode, setAuthMode, signIn, signUp, loginAsDemoUser } = useCrm();
+  const {
+    isAuthModalOpen,
+    closeAuthModal,
+    authMode,
+    setAuthMode,
+    signIn,
+    signUp,
+    loginAsDemoUser,
+    resetPasswordForEmail,
+  } = useCrm();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -11,6 +21,7 @@ export const AuthModal: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   if (!isAuthModalOpen) return null;
@@ -18,16 +29,20 @@ export const AuthModal: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccessMessage(null);
     setIsLoading(true);
 
     try {
       if (authMode === 'signin') {
         await signIn(email, password);
-      } else {
+      } else if (authMode === 'signup') {
         await signUp(name, email, password);
+      } else if (authMode === 'forgot-password') {
+        const result = await resetPasswordForEmail(email);
+        setSuccessMessage(result.message);
       }
     } catch (err: any) {
-      setError(err?.message || 'Authentication failed. Please verify credentials.');
+      setError(err?.message || 'Authentication failed. Please verify your credentials.');
     } finally {
       setIsLoading(false);
     }
@@ -35,6 +50,7 @@ export const AuthModal: React.FC = () => {
 
   const handleDemoLogin = async () => {
     setError(null);
+    setSuccessMessage(null);
     setIsLoading(true);
     try {
       await loginAsDemoUser();
@@ -45,9 +61,10 @@ export const AuthModal: React.FC = () => {
     }
   };
 
-  const switchMode = (mode: 'signin' | 'signup') => {
+  const switchMode = (mode: AuthMode) => {
     setAuthMode(mode);
     setError(null);
+    setSuccessMessage(null);
   };
 
   return (
@@ -69,41 +86,76 @@ export const AuthModal: React.FC = () => {
             </div>
             <span className="text-xl font-bold tracking-tight text-stone-900">NextCRM</span>
           </div>
-          <h2 className="text-2xl font-bold text-stone-900">
-            {authMode === 'signin' ? 'Welcome back' : 'Create your workspace'}
-          </h2>
-          <p className="text-sm text-stone-500 mt-1">
-            {authMode === 'signin'
-              ? 'Enter your credentials to access your sales pipeline.'
-              : 'Start organizing your contacts, deals, and activities today.'}
-          </p>
+
+          {authMode === 'forgot-password' ? (
+            <>
+              <h2 className="text-2xl font-bold text-stone-900">Reset your password</h2>
+              <p className="text-sm text-stone-500 mt-1">
+                Enter your account email address and we will send you a secure link to reset your password.
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold text-stone-900">
+                {authMode === 'signin' ? 'Welcome back' : 'Create your workspace'}
+              </h2>
+              <p className="text-sm text-stone-500 mt-1">
+                {authMode === 'signin'
+                  ? 'Enter your credentials to access your sales pipeline.'
+                  : 'Start organizing your contacts, deals, and activities today.'}
+              </p>
+            </>
+          )}
         </div>
 
-        {/* Mode Selector Tabs */}
-        <div className="flex p-1 mb-6 bg-stone-100 rounded-lg">
+        {/* Mode Selector Tabs (only shown on signin/signup) */}
+        {authMode !== 'forgot-password' ? (
+          <div className="flex p-1 mb-6 bg-stone-100 rounded-lg">
+            <button
+              type="button"
+              onClick={() => switchMode('signin')}
+              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                authMode === 'signin' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600 hover:text-stone-900'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => switchMode('signup')}
+              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                authMode === 'signup' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600 hover:text-stone-900'
+              }`}
+            >
+              Create Account
+            </button>
+          </div>
+        ) : (
           <button
             type="button"
             onClick={() => switchMode('signin')}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
-              authMode === 'signin' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600 hover:text-stone-900'
-            }`}
+            className="flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-stone-900 mb-6 transition-colors group"
           >
-            Sign In
+            <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+            <span>Back to sign in</span>
           </button>
-          <button
-            type="button"
-            onClick={() => switchMode('signup')}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
-              authMode === 'signup' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600 hover:text-stone-900'
-            }`}
-          >
-            Create Account
-          </button>
-        </div>
+        )}
 
+        {/* Error notification */}
         {error && (
           <div className="mb-5 p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
             {error}
+          </div>
+        )}
+
+        {/* Success notification */}
+        {successMessage && (
+          <div className="mb-5 p-3.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 space-y-2">
+            <div className="flex items-center gap-2 font-semibold text-emerald-900">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Password reset link sent</span>
+            </div>
+            <p className="text-emerald-700 leading-relaxed">{successMessage}</p>
           </div>
         )}
 
@@ -141,43 +193,45 @@ export const AuthModal: React.FC = () => {
             </div>
           </div>
 
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-semibold text-stone-700">Password</label>
-              {authMode === 'signin' && (
+          {authMode !== 'forgot-password' && (
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-stone-700">Password</label>
+                {authMode === 'signin' && (
+                  <button
+                    type="button"
+                    onClick={() => switchMode('forgot-password')}
+                    className="text-xs text-orange-600 hover:text-orange-700 font-medium transition-colors hover:underline"
+                  >
+                    Forgot password?
+                  </button>
+                )}
+              </div>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  minLength={6}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className="w-full pl-9 pr-10 py-2 text-sm bg-white border border-stone-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-stone-900 placeholder:text-stone-400"
+                />
                 <button
                   type="button"
-                  onClick={() => setError('Use your saved password or log in via the Quick Demo Account button below.')}
-                  className="text-xs text-orange-600 hover:text-orange-700 font-medium"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 p-0.5"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  Forgot password?
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
+              </div>
+              {authMode === 'signup' && (
+                <p className="text-[11px] text-stone-400 mt-1">Minimum 6 characters.</p>
               )}
             </div>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                required
-                minLength={6}
-                placeholder="••••••••"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full pl-9 pr-10 py-2 text-sm bg-white border border-stone-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-stone-900 placeholder:text-stone-400"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 p-0.5"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-            {authMode === 'signup' && (
-              <p className="text-[11px] text-stone-400 mt-1">Minimum 6 characters.</p>
-            )}
-          </div>
+          )}
 
           {authMode === 'signin' && (
             <div className="flex items-center gap-2">
@@ -201,6 +255,11 @@ export const AuthModal: React.FC = () => {
           >
             {isLoading ? (
               <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : authMode === 'forgot-password' ? (
+              <>
+                <span>Send Reset Link</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
             ) : (
               <>
                 <span>{authMode === 'signin' ? 'Sign In to Workspace' : 'Get Started Free'}</span>
@@ -208,28 +267,41 @@ export const AuthModal: React.FC = () => {
               </>
             )}
           </button>
+
+          {authMode === 'forgot-password' && (
+            <button
+              type="button"
+              onClick={() => switchMode('signin')}
+              className="w-full py-2 text-xs font-medium text-stone-500 hover:text-stone-800 transition-colors"
+            >
+              Remember your password? Sign in
+            </button>
+          )}
         </form>
 
-        {/* Divider */}
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-stone-200" />
-          </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="px-3 bg-white text-stone-400 font-medium">Or try immediately</span>
-          </div>
-        </div>
+        {/* Divider & Demo Login (only on signin/signup) */}
+        {authMode !== 'forgot-password' && (
+          <>
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-stone-200" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="px-3 bg-white text-stone-400 font-medium">Or try immediately</span>
+              </div>
+            </div>
 
-        {/* Quick Demo Login */}
-        <button
-          type="button"
-          onClick={handleDemoLogin}
-          disabled={isLoading}
-          className="w-full py-2.5 px-4 text-xs font-semibold text-stone-800 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors border border-stone-200 flex items-center justify-center gap-2"
-        >
-          <Sparkles className="w-4 h-4 text-orange-500" />
-          <span>Launch Instant Demo Workspace (Alex Morgan)</span>
-        </button>
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={isLoading}
+              className="w-full py-2.5 px-4 text-xs font-semibold text-stone-800 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors border border-stone-200 flex items-center justify-center gap-2"
+            >
+              <Sparkles className="w-4 h-4 text-orange-500" />
+              <span>Launch Instant Demo Workspace (Alex Morgan)</span>
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

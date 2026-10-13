@@ -108,6 +108,38 @@ export function signOutUser(): void {
   setCurrentUser(null);
 }
 
+export async function simulateResetPassword(email: string): Promise<void> {
+  const trimmedEmail = email.trim().toLowerCase();
+  await new Promise(res => setTimeout(res, 500));
+  const users = getStoredUsers();
+  const user = users.find(u => u.email === trimmedEmail);
+  if (user) {
+    localStorage.setItem('nextcrm_pending_reset_user', user.id);
+  }
+}
+
+export async function simulateUpdatePassword(newPassword: string): Promise<void> {
+  await new Promise(res => setTimeout(res, 500));
+  const pendingUserId = localStorage.getItem('nextcrm_pending_reset_user') || getCurrentUser()?.id;
+  const users = getStoredUsers();
+
+  if (pendingUserId) {
+    const userIndex = users.findIndex(u => u.id === pendingUserId);
+    if (userIndex !== -1) {
+      const passwordHash = await hashPassword(newPassword);
+      users[userIndex].passwordHash = passwordHash;
+      saveStoredUsers(users);
+      localStorage.removeItem('nextcrm_pending_reset_user');
+      return;
+    }
+  }
+  if (users.length > 0) {
+    const passwordHash = await hashPassword(newPassword);
+    users[0].passwordHash = passwordHash;
+    saveStoredUsers(users);
+  }
+}
+
 // Generic Storage Handlers for User-Isolated CRM Data
 function getCollection<T>(key: string): T[] {
   try {

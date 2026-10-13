@@ -155,9 +155,18 @@ erDiagram
    - `public.contacts`
    - `public.deals`
    - `public.activities`
-   - Performance indexes on foreign keys
    - Idempotent Row Level Security (RLS) policies enforcing `auth.uid() = user_id`
    - Auth trigger (`handle_new_user()`) for automatic profile provisioning
+
+### 📧 Supabase Auth & Password Reset Configuration
+
+To enable the **Forgot Password** email delivery and password reset flow:
+1. In the Supabase Dashboard, navigate to **Authentication** -> **URL Configuration**.
+2. In **Site URL**, configure your application domain (e.g., `http://localhost:3000` or production domain).
+3. In **Redirect URLs**, add the `/reset-password` callback route:
+   - `http://localhost:3000/reset-password` (for local development)
+   - `https://<your-deployed-domain>/reset-password` (for deployed production / Cloudflare)
+4. Under **Email Templates** -> **Reset Password**, Supabase uses `{{ .ConfirmationURL }}` which directs users directly to the `/reset-password` view to submit their new password.
 
 ---
 

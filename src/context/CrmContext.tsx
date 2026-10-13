@@ -10,6 +10,7 @@ import {
   ContactStatus,
   ToastMessage,
   AppView,
+  AuthMode,
 } from '../types/crm';
 import * as storage from '../services/storage';
 import { supabase, isSupabaseConfigured } from '../services/supabase';
@@ -20,15 +21,17 @@ interface CrmContextType {
   user: User | null;
   activeView: AppView;
   setActiveView: (view: AppView) => void;
-  authMode: 'signin' | 'signup';
-  setAuthMode: (mode: 'signin' | 'signup') => void;
+  authMode: AuthMode;
+  setAuthMode: (mode: AuthMode) => void;
   isAuthModalOpen: boolean;
-  openAuthModal: (mode?: 'signin' | 'signup') => void;
+  openAuthModal: (mode?: AuthMode) => void;
   closeAuthModal: () => void;
   signIn: (email: string, pass: string) => Promise<void>;
   signUp: (name: string, email: string, pass: string) => Promise<void>;
   signOut: () => Promise<void>;
   loginAsDemoUser: () => Promise<void>;
+  resetPasswordForEmail: (email: string) => Promise<{ success: boolean; message: string }>;
+  updatePassword: (newPassword: string) => Promise<{ success: boolean; message: string }>;
 
   // Supabase Status
   isSupabase: boolean;
@@ -133,7 +136,7 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       navigate(`/${view}`);
     }
   }, [navigate]);
-  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const [authMode, setAuthMode] = useState<AuthMode>('signin');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
@@ -307,7 +310,43 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const openAuthModal = (mode: 'signin' | 'signup' = 'signin') => {
+  const resetPasswordForEmail = async (email: string): Promise<{ success: boolean; message: string }> => {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      throw new Error('Please enter a valid email address.');
+    }
+
+    if (isSupabaseConfigured && supabase) {
+      await supabaseService.supabaseResetPasswordForEmail(trimmed);
+    } else {
+      await storage.simulateResetPassword(trimmed);
+    }
+
+    return {
+      success: true,
+      message: 'If an account exists with this email address, you will receive password reset instructions shortly.'
+    };
+  };
+
+  const updatePassword = async (newPassword: string): Promise<{ success: boolean; message: string }> => {
+    if (!newPassword || newPassword.length < 6) {
+      throw new Error('Password must be at least 6 characters long.');
+    }
+
+    if (isSupabaseConfigured && supabase) {
+      await supabaseService.supabaseUpdatePassword(newPassword);
+    } else {
+      await storage.simulateUpdatePassword(newPassword);
+    }
+
+    showToast('Your password has been successfully updated!', 'success');
+    return {
+      success: true,
+      message: 'Password updated successfully. You can now sign in with your new password.'
+    };
+  };
+
+  const openAuthModal = (mode: AuthMode = 'signin') => {
     setAuthMode(mode);
     setIsAuthModalOpen(true);
   };
@@ -807,6 +846,8 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         signUp,
         signOut,
         loginAsDemoUser,
+        resetPasswordForEmail,
+        updatePassword,
 
         isSupabase: isSupabaseConfigured,
         isConnectModalOpen,

@@ -16,6 +16,7 @@ import { ActivitiesView } from './components/activities/ActivitiesView';
 import { AnalyticsView } from './components/analytics/AnalyticsView';
 import { AuthModal } from './components/auth/AuthModal';
 import { ToastContainer } from './components/common/ToastContainer';
+import { ResetPasswordPage } from './components/auth/ResetPasswordPage';
 
 const LandingRoute: React.FC = () => (
   <>
@@ -32,6 +33,9 @@ export default function App() {
         <Routes>
           {/* Public Landing Page */}
           <Route path="/" element={<LandingRoute />} />
+
+          {/* Dedicated Password Reset Route */}
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
           {/* Authenticated CRM Layout & Nested Routes */}
           <Route element={<CrmLayout />}>
