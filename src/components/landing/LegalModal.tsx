@@ -13,8 +13,8 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="bg-white rounded-2xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-stone-200 relative max-h-[85vh] flex flex-col animate-in zoom-in-95 duration-150">
-        <div className="flex items-center justify-between pb-4 border-b border-stone-100">
+      <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-stone-200 relative max-h-[85vh] flex flex-col animate-in zoom-in-95 duration-150">
+        <div className="flex items-center justify-between p-4 border-b border-stone-100">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
               {isPrivacy ? <ShieldCheck className="w-5 h-5" /> : <FileText className="w-5 h-5" />}
@@ -35,7 +35,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose }) => {
           </button>
         </div>
 
-        <div className="overflow-y-auto py-4 text-sm text-stone-600 space-y-4 leading-relaxed pr-2">
+        <div className="overflow-y-auto py-4 text-sm text-stone-600 space-y-4 leading-relaxed p-4">
           {isPrivacy ? (
             <>
               <p>
@@ -75,7 +75,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ type, onClose }) => {
           )}
         </div>
 
-        <div className="pt-4 border-t border-stone-100 flex justify-end">
+        <div className="border-t border-stone-100 flex justify-end p-3">
           <button
             onClick={onClose}
             className="px-4 py-2 text-sm font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors"

@@ -84,7 +84,7 @@ export const LandingPage: React.FC = () => {
               </button>
               <button
                 onClick={() => openAuthModal('signup')}
-                className="px-4 py-2 text-xs font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs whitespace-nowrap flex items-center gap-1.5 cursor-pointer"
+                className="hidden md:flex px-4 py-2 text-xs font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs whitespace-nowrap items-center gap-1.5 cursor-pointer"
               >
                 <span>Get Started Free</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -149,7 +149,7 @@ export const LandingPage: React.FC = () => {
         </div>
 
         {/* Polished Product Preview (Realistic CRM Dashboard Mockup) */}
-        <div className="relative rounded-2xl border border-stone-200 bg-white shadow-xl overflow-hidden">
+        <div className="hidden md:block relative rounded-2xl border border-stone-200 bg-white shadow-xl overflow-hidden">
           {/* Top Mock Window Bar */}
           <div className="bg-stone-100 border-b border-stone-200 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">

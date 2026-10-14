@@ -97,7 +97,7 @@ export const TopNav: React.FC<TopNavProps> = ({ onOpenMobileDrawer }) => {
         </button>
 
         <div>
-          <h1 className="text-lg font-bold text-stone-900 tracking-tight">
+          <h1 className="hidden lg:block text-lg font-bold text-stone-900 tracking-tight">
             {getPageTitle(location.pathname)}
           </h1>
         </div>
