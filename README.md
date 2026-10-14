@@ -155,9 +155,18 @@ erDiagram
    - `public.contacts`
    - `public.deals`
    - `public.activities`
-   - Performance indexes on foreign keys
    - Idempotent Row Level Security (RLS) policies enforcing `auth.uid() = user_id`
    - Auth trigger (`handle_new_user()`) for automatic profile provisioning
+
+### 📧 Supabase Auth & Password Reset Configuration
+
+To enable the **Forgot Password** email delivery and password reset flow:
+1. In the Supabase Dashboard, navigate to **Authentication** -> **URL Configuration**.
+2. In **Site URL**, configure your application domain (e.g., `http://localhost:3000` or production domain).
+3. In **Redirect URLs**, add the `/reset-password` callback route:
+   - `http://localhost:3000/reset-password` (for local development)
+   - `https://<your-deployed-domain>/reset-password` (for deployed production / Cloudflare)
+4. Under **Email Templates** -> **Reset Password**, Supabase uses `{{ .ConfirmationURL }}` which directs users directly to the `/reset-password` view to submit their new password.
 
 ---
 
@@ -191,7 +200,7 @@ VITE_SUPABASE_ANON_KEY="your-anon-public-key"
 
 2. **Install dependencies**:
    ```bash
-   npm install
+   bun install
    ```
 
 3. **Configure environment variables**:
@@ -202,7 +211,7 @@ VITE_SUPABASE_ANON_KEY="your-anon-public-key"
 
 4. **Start the development server**:
    ```bash
-   npm run dev
+   bun run dev
    ```
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
@@ -212,11 +221,11 @@ VITE_SUPABASE_ANON_KEY="your-anon-public-key"
 
 | Command | Description |
 | :--- | :--- |
-| `npm run dev` | Starts the Vite development server on port 3000 |
-| `npm run build` | Compiles TypeScript and builds production assets in `dist/` |
-| `npm run preview` | Previews the built application locally |
-| `npm run lint` | Runs TypeScript type checking (`tsc --noEmit`) |
-| `npm run clean` | Removes build artifacts (`dist`) |
+| `bun run dev` | Starts the Vite development server on port 3000 |
+| `bun run build` | Compiles TypeScript and builds production assets in `dist/` |
+| `bun run preview` | Previews the built application locally |
+| `bun run lint` | Runs TypeScript type checking (`tsc --noEmit`) |
+| `bun run clean` | Removes build artifacts (`dist`) |
 
 ---
 

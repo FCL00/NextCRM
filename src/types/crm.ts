@@ -75,3 +75,5 @@ export interface ToastMessage {
 }
 
 export type AppView = 'landing' | 'overview' | 'contacts' | 'companies' | 'deals' | 'activities' | 'analytics';
+
+export type AuthMode = 'signin' | 'signup' | 'forgot-password';

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCrm } from '../../context/CrmContext';
 import { formatCurrency, formatDate } from '../../services/storage';
 import { Badge } from '../common/Badge';
@@ -231,13 +232,13 @@ export const OverviewDashboard: React.FC = () => {
               <h3 className="text-base font-bold text-stone-900">Pipeline by Stage</h3>
               <p className="text-xs text-stone-500">Deal value and count progression</p>
             </div>
-            <button
-              onClick={() => setActiveView('deals')}
+            <Link
+              to="/deals"
               className="text-xs font-semibold text-orange-600 hover:text-orange-700 flex items-center gap-1 transition-colors"
             >
               <span>View Pipeline</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            </Link>
           </div>
 
           <div className="space-y-4">
@@ -295,13 +296,13 @@ export const OverviewDashboard: React.FC = () => {
                 <h3 className="text-base font-bold text-stone-900">Contacts by Status</h3>
                 <p className="text-xs text-stone-500">Distribution of contact states</p>
               </div>
-              <button
-                onClick={() => setActiveView('contacts')}
+              <Link
+                to="/contacts"
                 className="text-xs font-semibold text-orange-600 hover:text-orange-700 flex items-center gap-1"
               >
                 <span>All Contacts</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </Link>
             </div>
 
             {/* SVG Donut */}
@@ -405,13 +406,13 @@ export const OverviewDashboard: React.FC = () => {
               <h3 className="text-base font-bold text-stone-900">Recent Deals</h3>
               <p className="text-xs text-stone-500">Recently active sales opportunities</p>
             </div>
-            <button
-              onClick={() => setActiveView('deals')}
+            <Link
+              to="/deals"
               className="text-xs font-semibold text-orange-600 hover:text-orange-700 flex items-center gap-1"
             >
               <span>View All</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            </Link>
           </div>
 
           {recentDeals.length === 0 ? (
@@ -471,13 +472,13 @@ export const OverviewDashboard: React.FC = () => {
               <h3 className="text-base font-bold text-stone-900">Recent Activities</h3>
               <p className="text-xs text-stone-500">Calls, tasks, meetings and notes</p>
             </div>
-            <button
-              onClick={() => setActiveView('activities')}
+            <Link
+              to="/activities"
               className="text-xs font-semibold text-orange-600 hover:text-orange-700 flex items-center gap-1"
             >
               <span>View All</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            </Link>
           </div>
 
           <div className="p-4 flex-1 space-y-3 overflow-y-auto max-h-[380px]">

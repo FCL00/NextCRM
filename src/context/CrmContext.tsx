@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   User,
   Company,
@@ -9,6 +10,7 @@ import {
   ContactStatus,
   ToastMessage,
   AppView,
+  AuthMode,
 } from '../types/crm';
 import * as storage from '../services/storage';
 import { supabase, isSupabaseConfigured } from '../services/supabase';
@@ -19,15 +21,17 @@ interface CrmContextType {
   user: User | null;
   activeView: AppView;
   setActiveView: (view: AppView) => void;
-  authMode: 'signin' | 'signup';
-  setAuthMode: (mode: 'signin' | 'signup') => void;
+  authMode: AuthMode;
+  setAuthMode: (mode: AuthMode) => void;
   isAuthModalOpen: boolean;
-  openAuthModal: (mode?: 'signin' | 'signup') => void;
+  openAuthModal: (mode?: AuthMode) => void;
   closeAuthModal: () => void;
   signIn: (email: string, pass: string) => Promise<void>;
   signUp: (name: string, email: string, pass: string) => Promise<void>;
   signOut: () => Promise<void>;
   loginAsDemoUser: () => Promise<void>;
+  resetPasswordForEmail: (email: string) => Promise<{ success: boolean; message: string }>;
+  updatePassword: (newPassword: string) => Promise<{ success: boolean; message: string }>;
 
   // Supabase Status
   isSupabase: boolean;
@@ -109,8 +113,30 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [user, setUser] = useState<User | null>(() => {
     return storage.getCurrentUser();
   });
-  const [activeView, setActiveView] = useState<AppView>(() => (storage.getCurrentUser() ? 'overview' : 'landing'));
-  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const activeView: AppView = useMemo(() => {
+    const path = location.pathname;
+    if (path.startsWith('/contacts')) return 'contacts';
+    if (path.startsWith('/companies')) return 'companies';
+    if (path.startsWith('/deals')) return 'deals';
+    if (path.startsWith('/activities')) return 'activities';
+    if (path.startsWith('/analytics')) return 'analytics';
+    if (path.startsWith('/dashboard') || path.startsWith('/overview')) return 'overview';
+    return 'landing';
+  }, [location.pathname]);
+
+  const setActiveView = useCallback((view: AppView) => {
+    if (view === 'overview') {
+      navigate('/dashboard');
+    } else if (view === 'landing') {
+      navigate('/');
+    } else {
+      navigate(`/${view}`);
+    }
+  }, [navigate]);
+  const [authMode, setAuthMode] = useState<AuthMode>('signin');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
@@ -150,7 +176,6 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     supabaseService.getSupabaseCurrentUser().then(currentUser => {
       if (currentUser) {
         setUser(currentUser);
-        setActiveView('overview');
       }
     });
 
@@ -160,14 +185,14 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setUser(u);
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
-        setActiveView('landing');
+        navigate('/');
       }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [navigate]);
 
   // Reload data for the active user (either from Supabase PostgreSQL or isolated storage)
   const reloadUserData = useCallback(async (userId: string) => {
@@ -215,13 +240,13 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const loggedIn = await supabaseService.supabaseSignIn(email, pass);
       setUser(loggedIn);
       setIsAuthModalOpen(false);
-      setActiveView('overview');
+      navigate('/dashboard');
       showToast(`Welcome back, ${loggedIn.name}! Connected to Supabase.`);
     } else {
       const loggedIn = await storage.signInUser(email, pass);
       setUser(loggedIn);
       setIsAuthModalOpen(false);
-      setActiveView('overview');
+      navigate('/dashboard');
       showToast(`Welcome back, ${loggedIn.name}!`);
     }
   };
@@ -231,7 +256,7 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const created = await supabaseService.supabaseSignUp(name, email, pass);
       setUser(created);
       setIsAuthModalOpen(false);
-      setActiveView('overview');
+      navigate('/dashboard');
       showToast(`Account created in Supabase Auth!`, 'success');
       // Populate initial demo records to Supabase for the user
       await loadDemoData(true);
@@ -240,7 +265,7 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       storage.loadDemoData(created.id, true);
       setUser(created);
       setIsAuthModalOpen(false);
-      setActiveView('overview');
+      navigate('/dashboard');
       showToast(`Account created! Sample CRM workspace loaded.`, 'success');
     }
   };
@@ -252,7 +277,7 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       storage.signOutUser();
     }
     setUser(null);
-    setActiveView('landing');
+    navigate('/');
     showToast('You have been signed out.');
   };
 
@@ -280,12 +305,48 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       setUser(existingDemo);
       setIsAuthModalOpen(false);
-      setActiveView('overview');
+      navigate('/dashboard');
       showToast('Signed in to demo workspace as Alex Morgan');
     }
   };
 
-  const openAuthModal = (mode: 'signin' | 'signup' = 'signin') => {
+  const resetPasswordForEmail = async (email: string): Promise<{ success: boolean; message: string }> => {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      throw new Error('Please enter a valid email address.');
+    }
+
+    if (isSupabaseConfigured && supabase) {
+      await supabaseService.supabaseResetPasswordForEmail(trimmed);
+    } else {
+      await storage.simulateResetPassword(trimmed);
+    }
+
+    return {
+      success: true,
+      message: 'If an account exists with this email address, you will receive password reset instructions shortly.'
+    };
+  };
+
+  const updatePassword = async (newPassword: string): Promise<{ success: boolean; message: string }> => {
+    if (!newPassword || newPassword.length < 6) {
+      throw new Error('Password must be at least 6 characters long.');
+    }
+
+    if (isSupabaseConfigured && supabase) {
+      await supabaseService.supabaseUpdatePassword(newPassword);
+    } else {
+      await storage.simulateUpdatePassword(newPassword);
+    }
+
+    showToast('Your password has been successfully updated!', 'success');
+    return {
+      success: true,
+      message: 'Password updated successfully. You can now sign in with your new password.'
+    };
+  };
+
+  const openAuthModal = (mode: AuthMode = 'signin') => {
     setAuthMode(mode);
     setIsAuthModalOpen(true);
   };
@@ -785,6 +846,8 @@ export const CrmProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         signUp,
         signOut,
         loginAsDemoUser,
+        resetPasswordForEmail,
+        updatePassword,
 
         isSupabase: isSupabaseConfigured,
         isConnectModalOpen,

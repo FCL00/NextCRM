@@ -137,6 +137,29 @@ export async function supabaseSignOut(): Promise<void> {
   await supabase.auth.signOut();
 }
 
+export function getPasswordResetRedirectUrl(): string {
+  const envUrl = (import.meta.env.VITE_APP_URL || import.meta.env.APP_URL || '').trim();
+  const baseUrl = envUrl ? envUrl.replace(/\/+$/, '') : (typeof window !== 'undefined' ? window.location.origin : '');
+  return `${baseUrl}/reset-password`;
+}
+
+export async function supabaseResetPasswordForEmail(email: string, redirectTo?: string): Promise<void> {
+  if (!supabase) throw new Error('Supabase is not configured.');
+  const redirect = redirectTo || getPasswordResetRedirectUrl();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: redirect,
+  });
+  if (error) throw error;
+}
+
+export async function supabaseUpdatePassword(newPassword: string): Promise<void> {
+  if (!supabase) throw new Error('Supabase is not configured.');
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
+  if (error) throw error;
+}
+
 export async function getSupabaseCurrentUser(): Promise<User | null> {
   if (!supabase) return null;
   const { data: { session } } = await supabase.auth.getSession();
