@@ -17,6 +17,7 @@ import { AnalyticsView } from './components/analytics/AnalyticsView';
 import { AuthModal } from './components/auth/AuthModal';
 import { ToastContainer } from './components/common/ToastContainer';
 import { ResetPasswordPage } from './components/auth/ResetPasswordPage';
+import { paths } from './constants/paths';
 
 const LandingRoute: React.FC = () => (
   <>
@@ -32,23 +33,23 @@ export default function App() {
       <CrmProvider>
         <Routes>
           {/* Public Landing Page */}
-          <Route path="/" element={<LandingRoute />} />
+          <Route path={paths.home.getHref} element={<LandingRoute />} />
 
           {/* Dedicated Password Reset Route */}
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path={paths.resetPassword.getHref} element={<ResetPasswordPage />} />
 
           {/* Authenticated CRM Layout & Nested Routes */}
           <Route element={<CrmLayout />}>
-            <Route path="/dashboard" element={<OverviewDashboard />} />
-            <Route path="/contacts" element={<ContactsView />} />
-            <Route path="/companies" element={<CompaniesView />} />
-            <Route path="/deals" element={<DealsView />} />
-            <Route path="/activities" element={<ActivitiesView />} />
-            <Route path="/analytics" element={<AnalyticsView />} />
+            <Route path={paths.dashboard.getHref} element={<OverviewDashboard />} />
+            <Route path={paths.contact.getHref} element={<ContactsView />} />
+            <Route path={paths.companies.getHref} element={<CompaniesView />} />
+            <Route path={paths.deals.getHref} element={<DealsView />} />
+            <Route path={paths.activities.getHref} element={<ActivitiesView />} />
+            <Route path={paths.analytics.getHref} element={<AnalyticsView />} />
           </Route>
 
           {/* Legacy / Alias Redirects */}
-          <Route path="/overview" element={<Navigate to="/dashboard" replace />} />
+          <Route path={paths.overview.getHref} element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </CrmProvider>
