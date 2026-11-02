@@ -6,7 +6,7 @@ const paths = {
     getHref: "/dashboard",
   },
   contact: {
-    getHref: "/contact",
+    getHref: "/contacts",
   },
   companies: {
     getHref: "/companies",
